@@ -46,7 +46,7 @@ mMenu = {
 
         //Вставляем кнопки для submenu
 
-        $('.js-mMenu .js-mMenu__is-menu li.parent > a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
+        $('.js-mMenu li.parent > a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
 
         $(document).on('click', '.js-mMenu_show-child', function(e) {
             e.preventDefault();
