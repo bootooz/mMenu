@@ -1,0 +1,157 @@
+/*  
+	Нужно сделать отдельный файл mobile-menu.css 
+	и подключить его после main.css 
+*/
+/*mobile-menu*/
+
+
+/*---------------------customize---------------------*/
+.js-mMenu .js-mMenu__show-hide-btn{
+	padding-left: 40px;
+	background-image: url(../img/ico-close-white.png);
+	background-repeat: no-repeat;
+	background-position: 7px center;
+	background-size: 30px;
+}
+.line_menu .menu-btn{
+	margin: 10px 0;
+}
+.js-mMenu_list ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.js-mMenu_list .submenu-wrapper{
+	display: block;
+	position: static;
+	background: #fff;
+	margin-top: 0;
+	border: 1px solid #33a457;
+	border-radius: 5px;
+}
+.js-mMenu_list .col-submenu{
+	display: block;
+	width: initial;
+	padding: 0;
+}
+.js-mMenu_list .mainmenu > li > a {
+	color: #222;
+	font-size: 20px;
+	padding: 5px;
+	display: block;
+	text-transform: uppercase;
+	font-family: "Open Sans";
+	font-weight: 700;
+}
+.js-mMenu_list .submenu > li > a{
+	font-size: 15px;
+	display: block;
+	color: #000;
+	text-transform: uppercase;
+	padding: 5px 0;
+}
+.js-mMenu_list .submenu-wrapper,
+.js-mMenu_list .parent > ul{
+	display: none;
+}
+.js-mMenu_list .submenu-level-3{
+	display: block;
+	border-bottom: 1px solid rgb(51, 164, 87);
+	padding-bottom: 5px;
+	padding-left: 9px;
+}
+.js-mMenu_list .submenu-level-3 a{
+	color: #000;
+}
+/*---------------------end customize---------------------*/
+
+.js-mMenu,
+.js-mMenu__show-hide-btn{
+	display: none;
+}
+
+/*Ширина скроллбара*/
+	.js-mMenu__scrBarrWidth10{ padding-right: 10px; }
+	.js-mMenu__scrBarrWidth11{ padding-right: 11px; }
+	.js-mMenu__scrBarrWidth12{ padding-right: 12px; }
+	.js-mMenu__scrBarrWidth13{ padding-right: 13px; }
+	.js-mMenu__scrBarrWidth14{ padding-right: 14px; }
+	.js-mMenu__scrBarrWidth15{ padding-right: 15px; }
+	.js-mMenu__scrBarrWidth16{ padding-right: 16px; }
+	.js-mMenu__scrBarrWidth17{ padding-right: 17px; }
+	.js-mMenu__scrBarrWidth18{ padding-right: 18px; }
+	.js-mMenu__scrBarrWidth19{ padding-right: 19px; }
+	.js-mMenu__scrBarrWidth20{ padding-right: 20px; }
+
+@media screen and (max-width: 2000px) {
+	.js-mMenu_append{
+		display: none !important;
+	}
+	body.js-mMenu__no-scroll{
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		overflow: hidden;
+	}
+	.js-mMenu__show-hide-btn{ display: inline-block; }
+	.js-mMenu{
+		display: block;
+		position: fixed;
+		right: -300px;
+		top: 0;
+		bottom: 0;
+		background: #f3eeee;
+		border-left: 5px solid #33a457;
+		width: 300px;
+		padding: 15px;
+		transition: 0.5s;
+		overflow: auto;
+		z-index: 99999;
+	}
+	.js-mMenu.js-mMenu__showed{
+		right: 0;
+	}
+	.js-mMenu_buttons{
+		margin-bottom: 15px;
+		text-align: center;
+	}
+	.js-mMenu_show-child{
+		position: relative;
+		display: inline-block;
+	    vertical-align: middle;
+	    width: 30px;
+	    height: 30px;
+	    background: #fff;
+	    border: 1px solid #33a457;
+	    border-radius: 5px;
+	}
+	.js-mMenu_parent-link{
+		position: relative;
+		padding-right: 40px !important;
+	}
+	.js-mMenu_show-child{
+		position: absolute;
+		right: 0;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+	.js-mMenu_show-child:before{
+		content: "";
+	    display: block;
+	    position: absolute;
+	    top: 50%;
+	    left: 50%;
+	    transform: translate(-50%, -50%);
+	    margin-top: 4px;
+	    border: 5px solid transparent;
+	    border-top-color: green;
+	}
+	.js-mMenu_show-child.js-mMenu_show-child--active:before{
+		margin-top: -2px;
+	    border-top-color: transparent;
+	    border-bottom-color: green;
+	}
+}
+/*END mobile-menu*/
