@@ -7,7 +7,9 @@ mMenu = {
 
     isInit: false,
 
-    init: function(setup = this.defaultSettings, _ = this) {
+    init: function(userSettings = this.defaultSettings, _ = this) {
+
+    	setup = $.extend( _.defaultSettings, userSettings );
 
         if (_.isInit){ return 'Error: This module is already initialized!';}
         if (!$(setup.menu).length) { return 'Error: Can not find "setup.menu"!';}

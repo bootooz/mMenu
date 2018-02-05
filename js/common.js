@@ -1,6 +1,8 @@
 $(document).ready(function() {
 	
 	//Инициализация модуля
-	mMenu.init();
+	mMenu.init({
+		menu: '.js-mMenu_append, .footer-menu, #footer .socials'
+	});
 
 });
