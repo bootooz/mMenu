@@ -26,32 +26,16 @@ mMenu = {
         //Инициализация кнопки "скрыть меню"
         _.setButtonHideMenu(setup.btnHideMenuText);
 
+
         menu.removeAttr('class').removeAttr('id').addClass('js-mMenu_is-appended');
 
         menu.appendTo(".js-mMenu .js-mMenu_list");
         
 
-        //Кнопка "Показать / Скрыть меню"
-        $(document).on('click', '.js-mMenu__show-hide-btn', function (e) {
-
-            var scrollWidth = _.getScrollbarWidth();
-
-            $('.js-mMenu').toggleClass('js-mMenu__showed');
-            
-            //Отменяет прокрутку страницы.
-            $('body').toggleClass('js-mMenu__no-scroll').toggleClass('js-mMenu__scrBarrWidth'+scrollWidth);
-
-        });
-
-
         //Вставляем кнопки для submenu
-
         $('.js-mMenu li.parent > a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
 
-        $(document).on('click', '.js-mMenu_show-child', function(e) {
-            e.preventDefault();
-            $(this).toggleClass('js-mMenu_show-child--active').parent().next().slideToggle();
-        });
+        _.setEventListener();
 
         _.isInit = true;
 
@@ -102,6 +86,25 @@ mMenu = {
     	}
 
         btn.appendTo(".js-mMenu .js-mMenu_buttons");
+    },
+    setEventListener: function(_ = this) {
+    	//Кнопка "Показать / Скрыть меню"
+        $(document).on('click', '.js-mMenu__show-hide-btn', function (e) {
+
+            var scrollWidth = _.getScrollbarWidth();
+
+            $('.js-mMenu').toggleClass('js-mMenu__showed');
+            
+            //Отменяет прокрутку страницы.
+            $('body').toggleClass('js-mMenu__no-scroll').toggleClass('js-mMenu__scrBarrWidth'+scrollWidth);
+
+        });
+
+        //"Показать / Скрыть" вложенные пункты меню
+        $(document).on('click', '.js-mMenu_show-child', function(e) {
+            e.preventDefault();
+            $(this).toggleClass('js-mMenu_show-child--active').parent().next().slideToggle();
+        });
     }
 
 }
