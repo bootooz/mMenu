@@ -9,7 +9,7 @@ mMenu = {
     isInit: false,
 
     init: function(userSettings = this.defaultSettings, _ = this) {
-
+    	
     	setup = $.extend( _.defaultSettings, userSettings );
 
         if (_.isInit){ return 'Error: This module is already initialized!';}
@@ -42,15 +42,17 @@ mMenu = {
         return _;
     },
 
-    destroy: function() {
-        if(!this.isInit){ return 'Error: This module is not initialised!'; }
+    destroy: function(_ = this) {
+        if(!_.isInit){ return 'Error: This module is not initialised!'; }
 
         var scrollWidth = this.getScrollbarWidth();
 
         $('.js-mMenu').remove();
         $('body').removeClass('js-mMenu__no-scroll').removeClass('js-mMenu__scrBarrWidth'+scrollWidth);
 
-        this.isInit = false;
+        _.destroyEvents();
+
+        _.isInit = false;
 
         return 'Module destroyed!';
 
@@ -89,7 +91,7 @@ mMenu = {
     },
     setEventListener: function(_ = this) {
     	//Кнопка "Показать / Скрыть меню"
-        $(document).on('click', '.js-mMenu__show-hide-btn', function (e) {
+        $('.js-mMenu__show-hide-btn').on('click', function showHideMenu(e) {
 
             var scrollWidth = _.getScrollbarWidth();
 
@@ -101,10 +103,14 @@ mMenu = {
         });
 
         //"Показать / Скрыть" вложенные пункты меню
-        $(document).on('click', '.js-mMenu_show-child', function(e) {
+        $('.js-mMenu_show-child').on('click', function showHideChildrenLink(e) {
             e.preventDefault();
             $(this).toggleClass('js-mMenu_show-child--active').parent().next().slideToggle();
         });
+    },
+    destroyEvents: function() {
+    	$('.js-mMenu__show-hide-btn').unbind('click');
+    	$('.js-mMenu_show-child').unbind('click');
     }
 
 }
