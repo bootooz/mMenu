@@ -3,6 +3,7 @@ mMenu = {
     defaultSettings: {
         menu: '.js-mMenu_append',
         comment: 'This block is added here using javascript. This initialize function - mMenu.init(). Look file main.js or common.js',
+        btnHideMenuText: '',
     },
 
     isInit: false,
@@ -14,19 +15,16 @@ mMenu = {
         if (_.isInit){ return 'Error: This module is already initialized!';}
         if (!$(setup.menu).length) { return 'Error: Can not find "setup.menu"!';}
         
-        var mobileMenuHtml = '<div class="js-mMenu"><div class="js-mMenu_buttons"></div><div class="js-mMenu_list"></div></div>';
-            menu = $(setup.menu).clone(true),
-            btn = $('.js-mMenu__show-hide-btn').clone(true);
-
-            var comment = '<!-- '+ setup.comment +' -->';
-
-
+        var mobileMenuHtml = '<div class="js-mMenu"><div class="js-mMenu_buttons"></div><div class="js-mMenu_list"></div></div>',
+            menu = $(setup.menu).clone(true);
+            
 
         $('body').prepend(mobileMenuHtml);
         
-            $('.js-mMenu').prepend(comment);
+            $('.js-mMenu').prepend('<!-- '+ setup.comment +' -->');
 
-        btn.appendTo(".js-mMenu .js-mMenu_buttons");
+        //Инициализация кнопки "скрыть меню"
+        _.setButtonHideMenu(setup.btnHideMenuText);
 
         menu.removeAttr('class').removeAttr('id').addClass('js-mMenu_is-appended');
 
@@ -92,6 +90,18 @@ mMenu = {
         document.body.removeChild(div);
 
         return scrollWidth;
+    },
+
+    setButtonHideMenu: function(btnHideMenuText) {
+
+    	var btn = $('.js-mMenu__show-hide-btn').clone(true);
+    	
+    	if (btnHideMenuText)
+    	{
+    		btn.html(btnHideMenuText);
+    	}
+
+        btn.appendTo(".js-mMenu .js-mMenu_buttons");
     }
 
 }
