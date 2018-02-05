@@ -9,31 +9,29 @@ mMenu = {
     isInit: false,
 
     init: function(userSettings = this.defaultSettings, _ = this) {
-    	
+
+    	//Setup - это объект, который происходит из слияния "настроек по умолчанию" и "настроек переданных в init()"
+    	//Причём настройки переданные в init() заменяют "настройки по умолчанию"
     	setup = $.extend( _.defaultSettings, userSettings );
 
+    	//_.isInit - Флаг инициализации модуля
         if (_.isInit){ return 'Error: This module is already initialized!';}
-        if (!$(setup.menu).length) { return 'Error: Can not find "setup.menu"!';}
         
-        var mobileMenuHtml = '<div class="js-mMenu"><div class="js-mMenu_buttons"></div><div class="js-mMenu_list"></div></div>',
-            menu = $(setup.menu).clone(true);
-            
 
+        //Каркас
+        var mobileMenuHtml = '<div class="js-mMenu"><div class="js-mMenu_buttons"></div><div class="js-mMenu_list"></div></div>';
+            
         $('body').prepend(mobileMenuHtml);
         
-            $('.js-mMenu').prepend('<!-- '+ setup.comment +' -->');
+        $('.js-mMenu').prepend('<!-- '+ setup.comment +' -->');
+
 
         //Инициализация кнопки "скрыть меню"
         _.setButtonHideMenu(setup.btnHideMenuText);
 
-
-        menu.removeAttr('class').removeAttr('id').addClass('js-mMenu_is-appended');
-
-        menu.appendTo(".js-mMenu .js-mMenu_list");
-        
-
-        //Вставляем кнопки для submenu
-        $('.js-mMenu li.parent > a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
+        //Добавление блоков в модуль (по умолчанию добавляется только $('.js-mMenu_append'))
+        //В "setup.menu" можно передать другой набор блоков
+        _.insertBlocks(setup.menu);
 
         _.setEventListener();
 
@@ -56,6 +54,17 @@ mMenu = {
 
         return 'Module destroyed!';
 
+    },
+
+    insertBlocks: function(menu) {
+    	var menu = $(menu).clone(true);
+        
+        menu.removeAttr('class').removeAttr('id').addClass('js-mMenu_is-appended');
+
+        menu.appendTo(".js-mMenu .js-mMenu_list");
+        
+        //Вставляем кнопки для submenu
+        $('.js-mMenu li.parent > a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
     },
 
     getScrollbarWidth: function() {
@@ -91,7 +100,7 @@ mMenu = {
     },
     setEventListener: function(_ = this) {
     	//Кнопка "Показать / Скрыть меню"
-        $('.js-mMenu__show-hide-btn').on('click', function showHideMenu(e) {
+        $('.js-mMenu__show-hide-btn').on('click', function(e) {
 
             var scrollWidth = _.getScrollbarWidth();
 
@@ -103,7 +112,7 @@ mMenu = {
         });
 
         //"Показать / Скрыть" вложенные пункты меню
-        $('.js-mMenu_show-child').on('click', function showHideChildrenLink(e) {
+        $('.js-mMenu_show-child').on('click', function(e) {
             e.preventDefault();
             $(this).toggleClass('js-mMenu_show-child--active').parent().next().slideToggle();
         });
