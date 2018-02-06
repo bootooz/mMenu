@@ -17,12 +17,9 @@ mMenu = {
     	//_.isInit - Флаг инициализации модуля
         if (_.isInit){ return 'Error: This module is already initialized!';}
         
-
         //Каркас
-        var mobileMenuHtml = '<div class="js-mMenu"><div class="js-mMenu_buttons"></div><div class="js-mMenu_list"></div></div>';
-            
+        var mobileMenuHtml = '<div class="js-mMenu"><div class="js-mMenu_buttons"></div><div class="js-mMenu_list"></div></div>';    
         $('body').prepend(mobileMenuHtml);
-        
         $('.js-mMenu').prepend('<!-- '+ setup.comment +' -->');
 
 

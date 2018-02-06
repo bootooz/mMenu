@@ -1,5 +1,5 @@
 /*  
-	Нужно сделать отдельный файл mobile-menu.css 
+	Нужно сделать отдельный файл mobile-menu.css
 	и подключить его после main.css 
 */
 /*mobile-menu*/
@@ -84,9 +84,7 @@
 	.js-mMenu__scrBarrWidth20{ padding-right: 20px; }
 
 @media screen and (max-width: 2000px) {
-	.js-mMenu_append{
-		display: none !important;
-	}
+	
 	body.js-mMenu__no-scroll{
 		position: absolute;
 		top: 0;
