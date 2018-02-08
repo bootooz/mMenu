@@ -12,7 +12,7 @@ mMenu = {
 
     	//Setup - это объект, который происходит из слияния "настроек по умолчанию" и "настроек переданных в init()"
     	//Причём настройки переданные в init() заменяют "настройки по умолчанию"
-    	setup = $.extend( _.defaultSettings, userSettings );
+    	var setup = $.extend( _.defaultSettings, userSettings );
 
     	//_.isInit - Флаг инициализации модуля
         if (_.isInit){ return 'Error: This module is already initialized!';}
@@ -35,22 +35,6 @@ mMenu = {
         _.isInit = true;
 
         return _;
-    },
-
-    destroy: function(_ = this) {
-        if(!_.isInit){ return 'Error: This module is not initialised!'; }
-
-        var scrollWidth = this.getScrollbarWidth();
-
-        $('.js-mMenu').remove();
-        $('body').removeClass('js-mMenu__no-scroll').removeClass('js-mMenu__scrBarrWidth'+scrollWidth);
-
-        _.destroyEvents();
-
-        _.isInit = false;
-
-        return 'Module destroyed!';
-
     },
 
     insertBlocks: function(menu) {
@@ -96,15 +80,44 @@ mMenu = {
         btn.appendTo(".js-mMenu .js-mMenu_buttons");
     },
     setEventListener: function(_ = this) {
+
+    	var menu = $('.js-mMenu'),
+    		body = $('body');
+
     	//Кнопка "Показать / Скрыть меню"
         $('.js-mMenu__show-hide-btn').on('click', function(e) {
-
             var scrollWidth = _.getScrollbarWidth();
 
-            $('.js-mMenu').toggleClass('js-mMenu__showed');
+            menu.toggleClass('js-mMenu__showed');
             
-            //Отменяет прокрутку страницы.
-            $('body').toggleClass('js-mMenu__no-scroll').toggleClass('js-mMenu__scrBarrWidth'+scrollWidth);
+            //Если меню открыли
+            if (menu.hasClass('js-mMenu__showed'))
+            {
+	            //Отменяет прокрутку страницы.
+	            body.addClass('js-mMenu__no-scroll');
+	            
+            	//Работа со скроллбаром
+            	body.addClass('js-mMenu__scrBarrWidth'+scrollWidth);
+            }
+        	
+        });
+
+        //Действия после анимации меню.
+        $('.js-mMenu').on('transitionend webkitTransitionEnd oTransitionEnd', function () {
+
+        	// Для плавного появления скролбара.
+            // Если меню закрыли. После того как меню спрячется, появится скролбар. 
+            // Иначе из-за ширины скролбара страница дёргается. 
+            if (!menu.hasClass('js-mMenu__showed'))
+            {
+            	var scrollWidth = _.getScrollbarWidth();
+            	
+            	//Возвращает прокрутку страницы.
+	            body.removeClass('js-mMenu__no-scroll');
+
+            	//Работа со скроллбаром
+            	body.removeClass('js-mMenu__scrBarrWidth'+scrollWidth);
+            }
 
         });
 
@@ -113,6 +126,22 @@ mMenu = {
             e.preventDefault();
             $(this).toggleClass('js-mMenu_show-child--active').parent().next().slideToggle();
         });
+    },
+
+    destroy: function(_ = this) {
+        if(!_.isInit){ return 'Error: This module is not initialised!'; }
+
+        var scrollWidth = this.getScrollbarWidth();
+
+        $('.js-mMenu').remove();
+        $('body').removeClass('js-mMenu__no-scroll').removeClass('js-mMenu__scrBarrWidth'+scrollWidth);
+
+        _.destroyEvents();
+
+        _.isInit = false;
+
+        return 'Module destroyed!';
+
     },
     destroyEvents: function() {
     	$('.js-mMenu__show-hide-btn').unbind('click');
