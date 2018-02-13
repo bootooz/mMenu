@@ -45,7 +45,8 @@ mMenu = {
         menu.appendTo(".js-mMenu .js-mMenu_list");
         
         //Вставляем кнопки для submenu
-        $('.js-mMenu li.parent > a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
+        $('.js-mMenu .js-mMenu_list ul > li > ul').parent().children('a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
+        $('.js-mMenu .js-mMenu_list ul > li > ul').parent().children('ul').addClass('js-mMenu_submenu');
     },
 
     getScrollbarWidth: function() {
