@@ -46,6 +46,14 @@
 	.js-mMenu__scrBarrWidth19{ padding-right: 19px; }
 	.js-mMenu__scrBarrWidth20{ padding-right: 20px; }
 
+	.js-mMenu__filter-blur{
+		-webkit-filter: blur(1px);
+		-moz-filter: blur(1px);
+		-o-filter: blur(1px);
+		-ms-filter: blur(1px);
+		filter: blur(1px);
+	}
+
 @media screen and (max-width: 2000px) {
 	
 	body.js-mMenu__no-scroll{

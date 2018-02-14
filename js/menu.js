@@ -7,10 +7,12 @@ mMenu = {
         comment: 'This block is added here using javascript. This initialize function - mMenu.init(). Look file main.js or common.js',
         btnCloseMenuText: '',
         overlay: false,
+        overlayBlur: false,
     },
 
     isInit: false,
     isOverlay: false,
+    isOverlayBlur: false,
 
     init: function(userSettings = this.defaultSettings, _ = this) {
 
@@ -37,7 +39,7 @@ mMenu = {
         //В "setup.block" можно передать другой набор блоков
         _.insertBlocks(setup.block);
 
-        _.setOverlay(setup.overlay);
+        _.setOverlay(setup.overlay, setup.overlayBlur);
 
         _.setEventListener();
 
@@ -119,14 +121,33 @@ mMenu = {
                 body.addClass('js-mMenu__scrBarrWidth'+scrollWidth);
 
                 //Оверлей
-                overlay.addClass('js-mMenu_overlay--showed');
+                if (_.isOverlay)
+                {
+                    overlay.addClass('js-mMenu_overlay--showed');
+
+                    //Добавляет размытие заднего фона. Работает только при оверлее
+                    if (_.isOverlayBlur)
+                    {
+                        $('body > *').not('[class=js-mMenu]').addClass('js-mMenu__filter-blur');
+                    }
+                }
+
             }
             //Если меню закрывают
             else
             {
                 //Оверлей
-                //Класс анимирует прозрачность при закрытии меню
-                overlay.addClass('js-mMenu_overlay--closing');
+                if (_.isOverlay)
+                {
+                    //Класс анимирует прозрачность при закрытии меню
+                    overlay.addClass('js-mMenu_overlay--closing');
+
+                    //Удаляет размытие заднего фона.
+                    if (_.isOverlayBlur)
+                    {
+                        $('body > *').not('[class=js-mMenu]').removeClass('js-mMenu__filter-blur');
+                    }
+                }
             }   
         }
 
@@ -147,8 +168,11 @@ mMenu = {
             	body.removeClass('js-mMenu__scrBarrWidth'+scrollWidth);
 
                 //Оверлей
-                //После полного закрытия меню, удаляем все активирующие классы
-                overlay.removeClass('js-mMenu_overlay--showed').removeClass('js-mMenu_overlay--closing');
+                if (_.isOverlay)
+                {
+                    //После полного закрытия меню, удаляем все активирующие классы
+                    overlay.removeClass('js-mMenu_overlay--showed').removeClass('js-mMenu_overlay--closing');
+                }
             }
 
         });
@@ -160,7 +184,7 @@ mMenu = {
         });
     },
 
-    setOverlay: function(init, _ = this) {
+    setOverlay: function(init, overlayBlur, _ = this) {
         if (init)
         {
             var module = $('.js-mMenu');
@@ -168,6 +192,11 @@ mMenu = {
             module.append('<div class="js-mMenu_overlay"></div>');
 
             _.isOverlay = true;
+            _.isOverlayBlur = overlayBlur ? overlayBlur : false;
+        }
+        else if(!init && overlayBlur)
+        {
+            console.log('Error: The "overlayBlur" property only works when "overlay = true"'); return false;
         }
     },
 
