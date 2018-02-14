@@ -1,9 +1,11 @@
 mMenu = {
-
+    //block - required
+    //button - required
     defaultSettings: {
         block: false,
+        button: false,
         comment: 'This block is added here using javascript. This initialize function - mMenu.init(). Look file main.js or common.js',
-        btnHideMenuText: '',
+        btnCloseMenuText: '',
     },
 
     isInit: false,
@@ -18,6 +20,7 @@ mMenu = {
         if (_.isInit){ console.log('mMenu error: This module is already initialized!'); return false;}
         //Не указан блок меню
         if (!setup.block) { console.log('mMenu error: The "block" property can not be empty!'); return false; }
+        if (!$(setup.block).length) { console.log('mMenu error: Object "$('+setup.block+')" not found!'); return false; }
         
         //Каркас
         var mobileMenuHtml = '<div class="js-mMenu"><div class="js-mMenu_buttons"></div><div class="js-mMenu_list"></div></div>';    
@@ -26,7 +29,7 @@ mMenu = {
 
 
         //Инициализация кнопки "скрыть меню"
-        _.setButtonHideMenu(setup.btnHideMenuText);
+        _.setButtonHideMenu(setup.button, setup.btnCloseMenuText);
 
         //Добавление блоков в модуль (по умолчанию добавляется только $('.js-mMenu_append'))
         //В "setup.block" можно передать другой набор блоков
@@ -71,13 +74,16 @@ mMenu = {
         return scrollWidth;
     },
 
-    setButtonHideMenu: function(btnHideMenuText) {
+    setButtonHideMenu: function(button, btnCloseMenuText) {
 
-    	var btn = $('.js-mMenu__show-hide-btn').clone(true);
+        if (!button) { console.log('mMenu error: The "button" property can not be empty!'); return false; }
+        if (!$(button).length) { console.log('mMenu error: Object "$('+button+')" not found!'); return false; }
+
+    	var btn = $(button).clone(true);
     	
-    	if (btnHideMenuText)
+    	if (btnCloseMenuText)
     	{
-    		btn.html(btnHideMenuText);
+    		btn.html(btnCloseMenuText);
     	}
 
         btn.appendTo(".js-mMenu .js-mMenu_buttons");
