@@ -25,8 +25,10 @@
 }
 
 /*---------------------end customize---------------------*/
-
-.js-mMenu,
+.js-mMenu{
+    position: fixed;
+    z-index: 999999;
+} 
 .js-mMenu__show-hide-btn{
 	display: none;
 }
@@ -55,7 +57,7 @@
 		overflow: hidden;
 	}
 	.js-mMenu__show-hide-btn{ display: inline-block; }
-	.js-mMenu{
+	.js-mMenu .js-mMenu_block{
 		display: block;
 		position: fixed;
 		right: -300px;
@@ -69,7 +71,7 @@
 		overflow: auto;
 		z-index: 99999;
 	}
-	.js-mMenu.js-mMenu__showed{
+	.js-mMenu .js-mMenu_block.js-mMenu__showed{
 		right: 0;
 	}
 	.js-mMenu_buttons{
@@ -111,6 +113,23 @@
 		margin-top: -2px;
 	    border-top-color: transparent;
 	    border-bottom-color: green;
+	}
+	.js-mMenu_overlay{
+		background-color: rgba(0,0,0,0.8);
+		opacity: 0;
+	    transition: opacity 0.5s;
+	}
+	.js-mMenu_overlay.js-mMenu_overlay--showed{
+		position: fixed;
+	    top: 0;
+	    left: 0;
+	    right: 0;
+	    bottom: 0;
+	    z-index: 0;
+	    opacity: 1;
+	}
+	.js-mMenu_overlay.js-mMenu_overlay--showed.js-mMenu_overlay--closing{
+		opacity: 0;
 	}
 }
 /*END mobile-menu*/

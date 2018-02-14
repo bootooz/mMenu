@@ -6,9 +6,11 @@ mMenu = {
         button: false,
         comment: 'This block is added here using javascript. This initialize function - mMenu.init(). Look file main.js or common.js',
         btnCloseMenuText: '',
+        overlay: false,
     },
 
     isInit: false,
+    isOverlay: false,
 
     init: function(userSettings = this.defaultSettings, _ = this) {
 
@@ -23,7 +25,7 @@ mMenu = {
         if (!$(setup.block).length) { console.log('mMenu error: Object "$('+setup.block+')" not found!'); return false; }
         
         //Каркас
-        var mobileMenuHtml = '<div class="js-mMenu"><div class="js-mMenu_buttons"></div><div class="js-mMenu_list"></div></div>';    
+        var mobileMenuHtml = '<div class="js-mMenu"><div class="js-mMenu_block"><div class="js-mMenu_buttons"></div><div class="js-mMenu_list"></div></div></div>';    
         $('body').prepend(mobileMenuHtml);
         $('.js-mMenu').prepend('<!-- '+ setup.comment +' -->');
 
@@ -34,6 +36,8 @@ mMenu = {
         //Добавление блоков в модуль (по умолчанию добавляется только $('.js-mMenu_append'))
         //В "setup.block" можно передать другой набор блоков
         _.insertBlocks(setup.block);
+
+        _.setOverlay(setup.overlay);
 
         _.setEventListener();
 
@@ -90,11 +94,17 @@ mMenu = {
     },
     setEventListener: function(_ = this) {
 
-    	var menu = $('.js-mMenu'),
+    	var menu = $('.js-mMenu .js-mMenu_block'),
+            overlay = $('.js-mMenu_overlay'),
     		body = $('body');
 
     	//Кнопка "Показать / Скрыть меню"
-        $('.js-mMenu__show-hide-btn').on('click', function(e) {
+        $('.js-mMenu__show-hide-btn').on('click', toggleMenu);
+
+        //Оверлей
+        overlay.on('click', toggleMenu);
+
+        function toggleMenu(e) {
             var scrollWidth = _.getScrollbarWidth();
 
             menu.toggleClass('js-mMenu__showed');
@@ -102,17 +112,26 @@ mMenu = {
             //Если меню открыли
             if (menu.hasClass('js-mMenu__showed'))
             {
-	            //Отменяет прокрутку страницы.
-	            body.addClass('js-mMenu__no-scroll');
-	            
-            	//Работа со скроллбаром
-            	body.addClass('js-mMenu__scrBarrWidth'+scrollWidth);
+                //Отменяет прокрутку страницы.
+                body.addClass('js-mMenu__no-scroll');
+                
+                //Работа со скроллбаром
+                body.addClass('js-mMenu__scrBarrWidth'+scrollWidth);
+
+                //Оверлей
+                overlay.addClass('js-mMenu_overlay--showed');
             }
-        	
-        });
+            //Если меню закрывают
+            else
+            {
+                //Оверлей
+                //Класс анимирует прозрачность при закрытии меню
+                overlay.addClass('js-mMenu_overlay--closing');
+            }   
+        }
 
         //Действия после анимации меню.
-        $('.js-mMenu').on('transitionend webkitTransitionEnd oTransitionEnd', function () {
+        menu.on('transitionend webkitTransitionEnd oTransitionEnd', function () {
 
         	// Для плавного появления скролбара.
             // Если меню закрыли. После того как меню спрячется, появится скролбар. 
@@ -126,6 +145,10 @@ mMenu = {
 
             	//Работа со скроллбаром
             	body.removeClass('js-mMenu__scrBarrWidth'+scrollWidth);
+
+                //Оверлей
+                //После полного закрытия меню, удаляем все активирующие классы
+                overlay.removeClass('js-mMenu_overlay--showed').removeClass('js-mMenu_overlay--closing');
             }
 
         });
@@ -135,6 +158,17 @@ mMenu = {
             e.preventDefault();
             $(this).toggleClass('js-mMenu_show-child--active').parent().next().slideToggle();
         });
+    },
+
+    setOverlay: function(init, _ = this) {
+        if (init)
+        {
+            var module = $('.js-mMenu');
+            
+            module.append('<div class="js-mMenu_overlay"></div>');
+
+            _.isOverlay = true;
+        }
     },
 
     destroy: function(_ = this) {
