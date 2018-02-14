@@ -1,7 +1,7 @@
 mMenu = {
 
     defaultSettings: {
-        menu: '.js-mMenu_append',
+        block: false,
         comment: 'This block is added here using javascript. This initialize function - mMenu.init(). Look file main.js or common.js',
         btnHideMenuText: '',
     },
@@ -15,7 +15,9 @@ mMenu = {
     	var setup = $.extend( _.defaultSettings, userSettings );
 
     	//_.isInit - Флаг инициализации модуля
-        if (_.isInit){ return 'Error: This module is already initialized!';}
+        if (_.isInit){ console.log('mMenu error: This module is already initialized!'); return false;}
+        //Не указан блок меню
+        if (!setup.block) { console.log('mMenu error: The "block" property can not be empty!'); return false; }
         
         //Каркас
         var mobileMenuHtml = '<div class="js-mMenu"><div class="js-mMenu_buttons"></div><div class="js-mMenu_list"></div></div>';    
@@ -27,8 +29,8 @@ mMenu = {
         _.setButtonHideMenu(setup.btnHideMenuText);
 
         //Добавление блоков в модуль (по умолчанию добавляется только $('.js-mMenu_append'))
-        //В "setup.menu" можно передать другой набор блоков
-        _.insertBlocks(setup.menu);
+        //В "setup.block" можно передать другой набор блоков
+        _.insertBlocks(setup.block);
 
         _.setEventListener();
 
@@ -37,12 +39,12 @@ mMenu = {
         return _;
     },
 
-    insertBlocks: function(menu) {
-    	var menu = $(menu).clone(true);
+    insertBlocks: function(block) {
+    	var block = $(block).clone(true);
         
-        menu.removeAttr('class').removeAttr('id').addClass('js-mMenu_is-appended');
+        block.removeAttr('class').removeAttr('id').addClass('js-mMenu_is-appended');
 
-        menu.appendTo(".js-mMenu .js-mMenu_list");
+        block.appendTo(".js-mMenu .js-mMenu_list");
         
         //Вставляем кнопки для submenu
         $('.js-mMenu .js-mMenu_list ul > li > ul').parent().children('a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
@@ -130,7 +132,7 @@ mMenu = {
     },
 
     destroy: function(_ = this) {
-        if(!_.isInit){ return 'Error: This module is not initialised!'; }
+        if(!_.isInit){ console.log('Error: This module is not initialised!'); return false; }
 
         var scrollWidth = this.getScrollbarWidth();
 
