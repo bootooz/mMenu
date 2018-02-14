@@ -13,6 +13,7 @@ mMenu = {
     isInit: false,
     isOverlay: false,
     isOverlayBlur: false,
+    button: false,
 
     init: function(userSettings = this.defaultSettings, _ = this) {
 
@@ -80,7 +81,7 @@ mMenu = {
         return scrollWidth;
     },
 
-    setButtonHideMenu: function(button, btnCloseMenuText) {
+    setButtonHideMenu: function(button, btnCloseMenuText, _ = this) {
 
         if (!button) { console.log('mMenu error: The "button" property can not be empty!'); return false; }
         if (!$(button).length) { console.log('mMenu error: Object "$('+button+')" not found!'); return false; }
@@ -93,15 +94,18 @@ mMenu = {
     	}
 
         btn.appendTo(".js-mMenu .js-mMenu_buttons");
+
+        _.button = button;
     },
     setEventListener: function(_ = this) {
 
     	var menu = $('.js-mMenu .js-mMenu_block'),
+            button = $(_.button),
             overlay = $('.js-mMenu_overlay'),
     		body = $('body');
 
     	//Кнопка "Показать / Скрыть меню"
-        $('.js-mMenu__show-hide-btn').on('click', toggleMenu);
+        button.on('click', toggleMenu);
 
         //Оверлей
         overlay.on('click', toggleMenu);
@@ -215,8 +219,8 @@ mMenu = {
         return 'Module destroyed!';
 
     },
-    destroyEvents: function() {
-    	$('.js-mMenu__show-hide-btn').unbind('click');
+    destroyEvents: function(_ = this) {
+    	$(_.button).unbind('click');
     	$('.js-mMenu_show-child').unbind('click');
     }
 
