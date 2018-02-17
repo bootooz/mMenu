@@ -18,9 +18,9 @@ $(document).ready(function() {
 });
 ```
 
-### Settings
+### Настройки
 
-Option | Type | Default | Description
+Свойство | Тип | По умолчанию | Описание
 ------ | ---- | ------- | -----------
 block | $(element) | false | Блок меню. Можно указать несколько элементов. Например: $('.el-1, .el-2, ...')
 button | $(element) | false | Кнопка, по нажатию которой открывается/закрывается меню
@@ -29,14 +29,14 @@ comment | string | 'This block is add...' | Коментарий в вёрстк
 overlay | boolean | false | Оверлей
 overlayBlur | boolean | false | Размытие текста под оверлеем
 
-### Methods
+### Мотоды
 
-Method | Argument | Description
+Метод | Аргумент | Описание
 ------ | -------- | -----------
 `mMenu.init` | options : object | Инициализирует mMenu
 `mMenu.destroy` | | Разрушает mMenu
 `mMenu.destroyEvents` | | Удаляет обработчики событий
 
-#### Dependencies
+#### Зависимости
 
 jQuery 3.0
