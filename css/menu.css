@@ -123,21 +123,14 @@
 	    border-bottom-color: green;
 	}
 	.js-mMenu_overlay{
-		background-color: rgba(0,0,0,0.8);
-		opacity: 0;
-	    transition: opacity 0.5s;
-	}
-	.js-mMenu_overlay.js-mMenu_overlay--showed{
+		display: none;
 		position: fixed;
 	    top: 0;
 	    left: 0;
 	    right: 0;
 	    bottom: 0;
 	    z-index: 0;
-	    opacity: 1;
-	}
-	.js-mMenu_overlay.js-mMenu_overlay--showed.js-mMenu_overlay--closing{
-		opacity: 0;
+		background-color: rgba(0,0,0,0.8);
 	}
 }
 /*END mobile-menu*/

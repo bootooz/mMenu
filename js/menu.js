@@ -10,10 +10,15 @@ mMenu = {
         overlayBlur: false,
     },
 
+    //Промежуточные состояния. Меняются при выполнении функций.
     isInit: false,
     isOverlay: false,
     isOverlayBlur: false,
     button: false,
+
+    //Запланировано на будущее.
+    //Переделать определение состояния меню (открыто/закрыто) с помощью флага status.
+    status: 'closed',
 
     init: function(userSettings = this.defaultSettings, _ = this) {
 
@@ -32,7 +37,6 @@ mMenu = {
         $('body').prepend(mobileMenuHtml);
         $('.js-mMenu').prepend('<!-- '+ setup.comment +' -->');
 
-
         //Инициализация кнопки "скрыть меню"
         _.setButtonHideMenu(setup.button, setup.btnCloseMenuText);
 
@@ -40,7 +44,9 @@ mMenu = {
         //В "setup.block" можно передать другой набор блоков
         _.insertBlocks(setup.block);
 
-        _.setOverlay(setup.overlay, setup.overlayBlur);
+        // Вызываем метод _.overlay.init объекта overlay с помощью call() 
+        // и передаем в метод _.overlay.init контекст _, далее - параметры используемые в функции init
+        _.overlay.init.call(_, setup.overlay, setup.overlayBlur);
 
         _.setEventListener();
 
@@ -125,33 +131,14 @@ mMenu = {
                 body.addClass('js-mMenu__scrBarrWidth'+scrollWidth);
 
                 //Оверлей
-                if (_.isOverlay)
-                {
-                    overlay.addClass('js-mMenu_overlay--showed');
-
-                    //Добавляет размытие заднего фона. Работает только при оверлее
-                    if (_.isOverlayBlur)
-                    {
-                        $('body > *').not('[class=js-mMenu]').addClass('js-mMenu__filter-blur');
-                    }
-                }
+                _.overlay.show.call(_, overlay);
 
             }
             //Если меню закрывают
             else
             {
                 //Оверлей
-                if (_.isOverlay)
-                {
-                    //Класс анимирует прозрачность при закрытии меню
-                    overlay.addClass('js-mMenu_overlay--closing');
-
-                    //Удаляет размытие заднего фона.
-                    if (_.isOverlayBlur)
-                    {
-                        $('body > *').not('[class=js-mMenu]').removeClass('js-mMenu__filter-blur');
-                    }
-                }
+                _.overlay.close.call(_, overlay);
             }   
         }
 
@@ -170,16 +157,9 @@ mMenu = {
 
             	//Работа со скроллбаром
             	body.removeClass('js-mMenu__scrBarrWidth'+scrollWidth);
-
-                //Оверлей
-                if (_.isOverlay)
-                {
-                    //После полного закрытия меню, удаляем все активирующие классы
-                    overlay.removeClass('js-mMenu_overlay--showed').removeClass('js-mMenu_overlay--closing');
-                }
             }
-
         });
+
 
         //"Показать / Скрыть" вложенные пункты меню
         $('.js-mMenu_show-child').on('click', function(e) {
@@ -188,19 +168,52 @@ mMenu = {
         });
     },
 
-    setOverlay: function(init, overlayBlur, _ = this) {
-        if (init)
-        {
-            var module = $('.js-mMenu');
-            
-            module.append('<div class="js-mMenu_overlay"></div>');
+    overlay: {
+        
+        init: function(init, overlayBlur, _ = this) {
+            if (init)
+            {
+                var module = $('.js-mMenu');
+                
+                module.append('<div class="js-mMenu_overlay"></div>');
 
-            _.isOverlay = true;
-            _.isOverlayBlur = overlayBlur ? overlayBlur : false;
-        }
-        else if(!init && overlayBlur)
-        {
-            console.log('Error: The "overlayBlur" property only works when "overlay = true"'); return false;
+                _.isOverlay = true;
+                _.isOverlayBlur = overlayBlur ? overlayBlur : false;
+            }
+            else if(!init && overlayBlur)
+            {
+                console.log('Error: The "overlayBlur" property only works when "overlay = true"'); return false;
+            }
+        },
+        
+        show: function(overlay, _ = this) {
+            var overlay = overlay;
+
+            if (_.isOverlay)
+            {
+                overlay.stop().fadeIn();
+
+                //Добавляет размытие заднего фона. Работает только при оверлее
+                if (_.isOverlayBlur)
+                {
+                    $('body > *').not('[class=js-mMenu]').addClass('js-mMenu__filter-blur');
+                }
+            }
+        },
+
+        close: function(overlay, _ = this) {
+            var overlay = overlay;
+            
+            if (_.isOverlay)
+            {
+                overlay.stop().fadeOut();
+
+                //Удаляет размытие заднего фона.
+                if (_.isOverlayBlur)
+                {
+                    $('body > *').not('[class=js-mMenu]').removeClass('js-mMenu__filter-blur');
+                }
+            }
         }
     },
 
@@ -219,9 +232,10 @@ mMenu = {
         return 'Module destroyed!';
 
     },
+    
     destroyEvents: function(_ = this) {
-    	$(_.button).unbind('click');
-    	$('.js-mMenu_show-child').unbind('click');
+        $(_.button).unbind('click');
+        $('.js-mMenu_show-child').unbind('click');
     }
 
 }
