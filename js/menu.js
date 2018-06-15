@@ -8,6 +8,7 @@ mMenu = {
         btnCloseMenuText: '',
         btnCloseMenuClass: '',
         submenuClass: '',
+        submenuRemoveClasses: false,
         overlay: false,
         overlayBlur: false,
     },
@@ -44,7 +45,7 @@ mMenu = {
 
         //Добавление блоков в модуль (по умолчанию добавляется только $('.js-mMenu_append'))
         //В "setup.block" можно передать другой набор блоков
-        _.insertBlocks(setup.block, setup.submenuClass);
+        _.insertBlocks(setup.block, setup.submenuClass, setup.submenuRemoveClasses);
 
         // Вызываем метод _.overlay.init объекта overlay с помощью call() 
         // и передаем в метод _.overlay.init контекст _, далее - параметры используемые в функции init
@@ -57,10 +58,26 @@ mMenu = {
         return _;
     },
 
-    insertBlocks: function(block, submenuClass) {
+    //submenuClass - класс подменю. если не указан - за подменю принимается "ul" вложенный в "li" - .js-mMenu_list ul > li > ul
+    //submenuRemoveClasses - bool - флаг. Если true - удалятся аттрибуты class у всех элементов внутри submenu
+    insertBlocks: function(block, submenuClass, submenuRemoveClasses) {
     	var block = $(block).clone(true);
         
         block.removeAttr('class').removeAttr('id').addClass('js-mMenu_is-appended');
+
+        //Удаляем аттрибут "class"
+        if (submenuRemoveClasses)
+        {
+            //Удалям аттрибут class у всех вложенных блоков.
+            if (submenuClass)
+            {
+                block.find('.'+submenuClass).find('[class]').removeAttr('class');
+            }
+            else
+            {
+                block.find('li > ul').find('[class]').removeAttr('class');
+            }
+        }
 
         block.appendTo(".js-mMenu .js-mMenu_list");
         

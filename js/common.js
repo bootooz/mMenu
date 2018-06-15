@@ -6,7 +6,8 @@ $(document).ready(function() {
 		button: '.js-mMenu__show-hide-btn',
 		btnCloseMenuText: 'скрыть меню',
 		btnCloseMenuClass: 'class1 class2',
-		submenuClass: 'js-submenuClass',
+		submenuClass: 'js-mysubmenu',
+		submenuRemoveClasses: true,
 		overlay: true
 	});
 
