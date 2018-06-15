@@ -8,6 +8,7 @@ $(document).ready(function() {
 		btnCloseMenuClass: 'class1 class2',
 		submenuClass: 'js-mysubmenu',
 		submenuRemoveClasses: true,
+		submenuRemoveStyles: true,
 		overlay: true
 	});
 
