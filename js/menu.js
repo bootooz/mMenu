@@ -7,6 +7,7 @@ mMenu = {
         comment: 'This block is added here using javascript. This initialize function - mMenu.init(). Look file main.js or common.js',
         btnCloseMenuText: '',
         btnCloseMenuClass: '',
+        submenuClass: '',
         overlay: false,
         overlayBlur: false,
     },
@@ -43,7 +44,7 @@ mMenu = {
 
         //Добавление блоков в модуль (по умолчанию добавляется только $('.js-mMenu_append'))
         //В "setup.block" можно передать другой набор блоков
-        _.insertBlocks(setup.block);
+        _.insertBlocks(setup.block, setup.submenuClass);
 
         // Вызываем метод _.overlay.init объекта overlay с помощью call() 
         // и передаем в метод _.overlay.init контекст _, далее - параметры используемые в функции init
@@ -56,7 +57,7 @@ mMenu = {
         return _;
     },
 
-    insertBlocks: function(block) {
+    insertBlocks: function(block, submenuClass) {
     	var block = $(block).clone(true);
         
         block.removeAttr('class').removeAttr('id').addClass('js-mMenu_is-appended');
@@ -64,8 +65,21 @@ mMenu = {
         block.appendTo(".js-mMenu .js-mMenu_list");
         
         //Вставляем кнопки для submenu
-        $('.js-mMenu .js-mMenu_list ul > li > ul').parent().children('a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
-        $('.js-mMenu .js-mMenu_list ul > li > ul').parent().children('ul').addClass('js-mMenu_submenu');
+        if (!submenuClass)
+        {
+        	//Если класс подменю не указан, принимаем за подменю любую ul находящуюся в li.
+            $('.js-mMenu .js-mMenu_list ul > li > ul').parent().children('a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
+            $('.js-mMenu .js-mMenu_list ul > li > ul').parent().children('ul').addClass('js-mMenu_submenu');
+        }
+        else
+        {
+        	//Если класс подменю указан, принимаем за подменю блок с этим классом.
+            $('.js-mMenu .js-mMenu_list ul > li > .'+submenuClass).parent().children('a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
+            $('.js-mMenu .js-mMenu_list ul > li > .'+submenuClass).parent().children('.'+submenuClass).addClass('js-mMenu_submenu');
+            //Также оставляем стандартную обработку.
+            $('.js-mMenu .js-mMenu_list ul > li > ul').not('.'+submenuClass).parent().children('a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
+            $('.js-mMenu .js-mMenu_list ul > li > ul').not('.'+submenuClass).parent().children('ul').addClass('js-mMenu_submenu');
+        }
     },
 
     getScrollbarWidth: function() {
