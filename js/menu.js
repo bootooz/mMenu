@@ -6,6 +6,7 @@ mMenu = {
         button: false,
         comment: 'This block is added here using javascript. This initialize function - mMenu.init(). Look file main.js or common.js',
         btnCloseMenuText: '',
+        btnCloseMenuClass: '',
         overlay: false,
         overlayBlur: false,
     },
@@ -38,7 +39,7 @@ mMenu = {
         $('.js-mMenu').prepend('<!-- '+ setup.comment +' -->');
 
         //Инициализация кнопки "скрыть меню"
-        _.setButtonHideMenu(setup.button, setup.btnCloseMenuText);
+        _.setButtonHideMenu(setup.button, setup.btnCloseMenuText, setup.btnCloseMenuClass);
 
         //Добавление блоков в модуль (по умолчанию добавляется только $('.js-mMenu_append'))
         //В "setup.block" можно передать другой набор блоков
@@ -87,7 +88,7 @@ mMenu = {
         return scrollWidth;
     },
 
-    setButtonHideMenu: function(button, btnCloseMenuText, _ = this) {
+    setButtonHideMenu: function(button, btnCloseMenuText, btnCloseMenuClass, _ = this) {
 
         if (!button) { console.log('mMenu error: The "button" property can not be empty!'); return false; }
         if (!$(button).length) { console.log('mMenu error: Object "$('+button+')" not found!'); return false; }
@@ -98,6 +99,10 @@ mMenu = {
     	{
     		btn.html(btnCloseMenuText);
     	}
+    	if (btnCloseMenuClass)
+        {
+            btn.addClass(btnCloseMenuClass);
+        }
 
         btn.appendTo(".js-mMenu .js-mMenu_buttons");
 
