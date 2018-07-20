@@ -80,58 +80,99 @@ mMenu = {
 
     },
 
+    //blockStr - (str) набор блоков в таком виде ".block1, .block2, ..."
     //submenuClass - класс подменю. если не указан - за подменю принимается "ul" вложенный в "li" - .js-mMenu_list ul > li > ul
     //submenuRemoveClasses - bool - флаг. Если true - удалятся аттрибуты class у всех элементов внутри submenu
-    insertBlocks: function(block, submenuClass, submenuRemoveClasses, submenuRemoveStyles) {
-    	var block = $(block).clone(true);
-        
-        block.removeAttr('class').removeAttr('id').addClass('js-mMenu_is-appended');
+    insertBlocks: function(blockStr, submenuClass, submenuRemoveClasses, submenuRemoveStyles) {
+        var block = $(blockStr).clone(true);
 
-        //Удаляем аттрибут "class"
-        if (submenuRemoveClasses)
-        {
-            //Удалям аттрибут class у всех вложенных блоков.
-            if (submenuClass)
+        block.each(function() {
+
+            var th = $(this),
+                blockClasses = th.attr('class').split(' '),
+                initClasses = blockStr,
+                newClassList = '';
+            
+            // Удаляем точки в строке набора классов..
+            initClasses = initClasses.replace(/\./g, "");
+            // Разбиваем строку на массив
+            initClasses = initClasses.split(', ');
+            // Удаляем у блока меню класс инициализации.. Который прописан в blockStr..
+            blockClasses = blockClasses.filter(e => !~initClasses.indexOf(e));
+
+            // Формирует новые классы для блока меню. Добавляет префикс "js-mMenu__"
+            for (var i = 0; i < blockClasses.length; i++) {
+                blockClasses[i] = 'js-mMenu__'+blockClasses[i];
+                
+                // Если у элемента больше чем один класс..
+                if (blockClasses.length > 1)
+                {
+                    // Если класс в наборе последний, то пробел в конце класса опускаем.
+                    if (i == blockClasses.length-1)
+                    {
+                        newClassList += blockClasses[i];
+                    }
+                    else
+                    {
+                        newClassList += blockClasses[i]+' ';
+                    }
+                }
+                else
+                {
+                    newClassList = blockClasses[i];
+                }
+            }
+            
+            th.removeAttr('class').removeAttr('id').addClass('js-mMenu_is-appended'+' '+newClassList);
+
+            //Удаляем аттрибут "class"
+            if (submenuRemoveClasses)
             {
-                block.find('.'+submenuClass).find('[class]').removeAttr('class');
+                //Удалям аттрибут class у всех вложенных блоков.
+                if (submenuClass)
+                {
+                    th.find('.'+submenuClass).find('[class]').removeAttr('class');
+                }
+                else
+                {
+                    th.find('li > ul').find('[class]').removeAttr('class');
+                }
+            }
+            //Удаляем аттрибут "style"
+            if (submenuRemoveStyles)
+            {
+                //Удалям аттрибут style у всех вложенных блоков.
+                if (submenuClass)
+                {
+                    th.find('.'+submenuClass).find('[style]').removeAttr('style');
+                }
+                else
+                {
+                    th.find('li > ul').find('[style]').removeAttr('style');
+                }
+            }
+
+            th.appendTo(".js-mMenu .js-mMenu_list");
+            
+            //Вставляем кнопки для submenu
+            if (!submenuClass)
+            {
+                //Если класс подменю не указан, принимаем за подменю любую ul находящуюся в li.
+                $('.js-mMenu .js-mMenu_list ul > li > ul').parent().children('a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
+                $('.js-mMenu .js-mMenu_list ul > li > ul').parent().children('ul').addClass('js-mMenu_submenu');
             }
             else
             {
-                block.find('li > ul').find('[class]').removeAttr('class');
+                //Если класс подменю указан, принимаем за подменю блок с этим классом.
+                $('.js-mMenu .js-mMenu_list ul > li > .'+submenuClass).parent().children('a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
+                $('.js-mMenu .js-mMenu_list ul > li > .'+submenuClass).parent().children('.'+submenuClass).addClass('js-mMenu_submenu');
+                //Также оставляем стандартную обработку.
+                $('.js-mMenu .js-mMenu_list ul > li > ul').not('.'+submenuClass).parent().children('a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
+                $('.js-mMenu .js-mMenu_list ul > li > ul').not('.'+submenuClass).parent().children('ul').addClass('js-mMenu_submenu');
             }
-        }
-		//Удаляем аттрибут "style"
-        if (submenuRemoveStyles)
-        {
-            //Удалям аттрибут style у всех вложенных блоков.
-            if (submenuClass)
-            {
-                block.find('.'+submenuClass).find('[style]').removeAttr('style');
-            }
-            else
-            {
-                block.find('li > ul').find('[style]').removeAttr('style');
-            }
-        }
 
-        block.appendTo(".js-mMenu .js-mMenu_list");
-        
-        //Вставляем кнопки для submenu
-        if (!submenuClass)
-        {
-        	//Если класс подменю не указан, принимаем за подменю любую ul находящуюся в li.
-            $('.js-mMenu .js-mMenu_list ul > li > ul').parent().children('a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
-            $('.js-mMenu .js-mMenu_list ul > li > ul').parent().children('ul').addClass('js-mMenu_submenu');
-        }
-        else
-        {
-        	//Если класс подменю указан, принимаем за подменю блок с этим классом.
-            $('.js-mMenu .js-mMenu_list ul > li > .'+submenuClass).parent().children('a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
-            $('.js-mMenu .js-mMenu_list ul > li > .'+submenuClass).parent().children('.'+submenuClass).addClass('js-mMenu_submenu');
-            //Также оставляем стандартную обработку.
-            $('.js-mMenu .js-mMenu_list ul > li > ul').not('.'+submenuClass).parent().children('a').addClass('js-mMenu_parent-link').append('<div class="js-mMenu_show-child"></div>');
-            $('.js-mMenu .js-mMenu_list ul > li > ul').not('.'+submenuClass).parent().children('ul').addClass('js-mMenu_submenu');
-        }
+        });
+
     },
 
     getScrollbarWidth: function() {
