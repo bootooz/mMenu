@@ -12,6 +12,7 @@ mMenu = {
         submenuRemoveStyles: false,
         overlay: false,
         overlayBlur: false,
+        position: 'left',
     },
 
     //Промежуточные состояния. Меняются при выполнении функций.
@@ -26,11 +27,11 @@ mMenu = {
 
     init: function(userSettings = this.defaultSettings, _ = this) {
 
-    	//Setup - это объект, который происходит из слияния "настроек по умолчанию" и "настроек переданных в init()"
-    	//Причём настройки переданные в init() заменяют "настройки по умолчанию"
-    	var setup = $.extend( _.defaultSettings, userSettings );
+        //Setup - это объект, который происходит из слияния "настроек по умолчанию" и "настроек переданных в init()"
+        //Причём настройки переданные в init() заменяют "настройки по умолчанию"
+        var setup = $.extend( _.defaultSettings, userSettings );
 
-    	//_.isInit - Флаг инициализации модуля
+        //_.isInit - Флаг инициализации модуля
         if (_.isInit){ console.log('mMenu error: This module is already initialized!'); return false;}
         //Не указан блок меню
         if (!setup.block) { console.log('mMenu error: The "block" property can not be empty!'); return false; }
@@ -41,12 +42,16 @@ mMenu = {
         $('body').prepend(mobileMenuHtml);
         $('.js-mMenu').prepend('<!-- '+ setup.comment +' -->');
 
+        // Устанавливается позиционирование меню. (по умолчанию - слева)
+        _.setPosition(setup.position);
+
         //Инициализация кнопки "скрыть меню"
         _.setButtonHideMenu(setup.button, setup.btnCloseMenuText, setup.btnCloseMenuClass);
 
-        //Добавление блоков в модуль (по умолчанию добавляется только $('.js-mMenu_append'))
-        //В "setup.block" можно передать другой набор блоков
+        //(Удалить..) //Добавление блоков в модуль (по умолчанию добавляется только $('.js-mMenu_append'))
+        //В "setup.block" можно передать набор блоков
         _.insertBlocks(setup.block, setup.submenuClass, setup.submenuRemoveClasses, setup.submenuRemoveStyles);
+        
 
         // Вызываем метод _.overlay.init объекта overlay с помощью call() 
         // и передаем в метод _.overlay.init контекст _, далее - параметры используемые в функции init
@@ -57,6 +62,22 @@ mMenu = {
         _.isInit = true;
 
         return _;
+    },
+
+    // Устанавливается позиционирование меню. (по умолчанию - слева)
+    setPosition: function(position, _ = this) {
+            
+        var block = $('.js-mMenu .js-mMenu_block');
+
+        switch (position) {
+            case 'right':
+                block.addClass('js-mMenu__position_right');    
+            break;
+                       
+            default:
+                block.addClass('js-mMenu__position_left');
+        }
+
     },
 
     //submenuClass - класс подменю. если не указан - за подменю принимается "ul" вложенный в "li" - .js-mMenu_list ul > li > ul

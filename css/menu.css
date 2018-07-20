@@ -68,20 +68,38 @@
 	.js-mMenu .js-mMenu_block{
 		display: block;
 		position: fixed;
-		right: -300px;
 		top: 0;
 		bottom: 0;
 		background: #f3eeee;
-		border-left: 5px solid #33a457;
 		width: 300px;
 		padding: 15px;
 		transition: 0.5s;
 		overflow: auto;
 		z-index: 99999;
+		border-color: #33a457;
+		border-width: 0;
+		border-style: solid;
 	}
-	.js-mMenu .js-mMenu_block.js-mMenu__showed{
-		right: 0;
-	}
+	/* position right */
+		.js-mMenu .js-mMenu_block.js-mMenu__position_right{
+			border-left-width: 5px;
+			right: -300px;
+		}
+		.js-mMenu .js-mMenu_block.js-mMenu__position_right.js-mMenu__showed{
+			right: 0;
+		}
+	/* position right */
+
+	/* position left */
+		.js-mMenu .js-mMenu_block.js-mMenu__position_left{
+			border-right-width: 5px;
+			left: -300px;
+		}
+		.js-mMenu .js-mMenu_block.js-mMenu__position_left.js-mMenu__showed{
+			left: 0;
+		}
+	/* position left */
+
 	.js-mMenu_buttons{
 		margin-bottom: 15px;
 		text-align: center;
